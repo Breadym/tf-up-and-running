@@ -4,17 +4,28 @@ provider "aws" {
 
 data "aws_availability_zones" "all" {}
 
+data "aws_remote_state" "db" {
+  backend = "s3" 
+  
+  config {
+    bucket  = "a-really-unique-name-that-no-one-else-has-used-2"
+    key     = "global/s3/terraform.tfstate"
+    region  = "ap-southeast-2"
+  }
+}
+
 resource "aws_launch_template" "example" {
   image_id               = "ami-06259b63260eddc13"
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.instance.id]
 
-  user_data = base64encode(<<-EOF
-              #!/bin/bash
-              echo "Hello, World" > index.html
-              nohup busybox httpd -f -p "${var.server_port}" &
-              EOF
-  )
+  user_data = templatefile("user-data.sh",
+    {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.address
+    db_port     = data.terraform_remote_state.db.outputs.port
+  })
+
   lifecycle {
     create_before_destroy = true
   }
