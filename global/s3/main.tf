@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "a-really-unique-name-that-no-one-else-has-used"
+  bucket = "a-really-unique-name-that-no-one-else-has-used-2"
 
   lifecycle {
     prevent_destroy = true
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 
 terraform {
   backend "s3" {
-    bucket  = "a-really-unique-name-that-no-one-else-has-used"
+    bucket  = "a-really-unique-name-that-no-one-else-has-used-2"
     key     = "global/s3/terraform.tfstate"
     region  = "ap-southeast-2"
     encrypt = true
