@@ -1,15 +1,15 @@
 terraform {
-  required_version = ">= 1.0.0, < 2.0.0"
+  required_version = ">= 1.2"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = "~> 5.92"
     }
   }
   backend "s3" {
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
+    bucket = "a-really-unique-name-that-no-one-else-has-used-2"
+    key    = "global/s3/terraform.tfstate"
     region = "ap-southeast-2"
     dynamodb_table = "a-really-unique-name-that-no-one-else-has-used-db"
     encrypt        = true
