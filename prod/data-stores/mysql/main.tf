@@ -7,11 +7,12 @@ terraform {
       version = "~> 4.0"
     }
   }
+
   backend "s3" {
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
-    region = "ap-southeast-2"
-    dynamodb_table = "a-really-unique-name-that-no-one-else-has-used-db"
+    bucket         = "a-really-unique-name-that-no-one-else-has-used-2"
+    key            = "/terraform.tfstate"
+    region         = "ap-southeast-2"
+    dynamodb_table = "<YOUR DYNAMODB TABLE>"
     encrypt        = true
   }
 }
@@ -19,7 +20,6 @@ terraform {
 provider "aws" {
   region = "ap-southeast-2"
 }
-
 
 resource "aws_db_instance" "example" {
   identifier_prefix   = "terraform-up-and-running"

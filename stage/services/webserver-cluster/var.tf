@@ -39,7 +39,14 @@ variable "alb_security_group_name" {
   type        = string
   default     = "terraform-example-alb"
 }
+
 variable "elb_port" {
   description = "default 8080 port"
   default     = 80
+}
+
+variable "cluster_name" {
+  description = "The name to use to namespace all the resources in the cluster"
+  type        = string
+  default     = "webservers-prod"
 }

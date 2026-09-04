@@ -1,16 +1,32 @@
+terraform {
+  required_version = ">= 1.0.0, < 2.0.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
 provider "aws" {
   region = "ap-southeast-2"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "a-really-unique-name-that-no-one-else-has-used-2"
 
+  bucket = var.bucket_name
+
+  // This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production
+  // usage
   force_destroy = true
+
 }
 
-resource "aws_s3_bucket_versioning" "terraform_state" {
+# Enable versioning so you can see the full revision history of your
+# state files
+resource "aws_s3_bucket_versioning" "enabled" {
   bucket = aws_s3_bucket.terraform_state.id
-
   versioning_configuration {
     status = "Enabled"
   }
@@ -44,14 +60,5 @@ resource "aws_dynamodb_table" "terraform_locks" {
   attribute {
     name = "LockID"
     type = "S"
-  }
-}
-
-terraform {
-  backend "s3" {
-    bucket  = "a-really-unique-name-that-no-one-else-has-used-2"
-    key     = "global/s3/terraform.tfstate"
-    region  = "ap-southeast-2"
-    encrypt = true
   }
 }
